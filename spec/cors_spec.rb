@@ -22,9 +22,6 @@ describe "Rack::CORS" do
   end
 
   describe "a simple CORS request" do
-    it "succeeds" do
-      status.should == 200
-    end
     describe "headers" do
       subject { headers.keys }
       it { should include('Access-Control-Allow-Origin') }
@@ -40,8 +37,11 @@ describe "Rack::CORS" do
        'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST', 
        'HTTP_ORIGIN' => 'http://example.com'}
     }
-    it "responds to OPTIONS" do
-      status.should == 200
+    it "be an empty response" do
+      body.should be_empty
+    end
+    it "Content-Length should be 0" do
+      headers['Content-Length'].should == 0
     end
     describe "headers" do
       subject { headers.keys }
@@ -50,67 +50,21 @@ describe "Rack::CORS" do
       it { should include('Access-Control-Max-Age') }
       it { should include('Access-Control-Allow-Headers')}
     end
-    context "next request after pre-flighting" do
-      describe "headers" do
-        subject { headers.keys }
-        it { should include('Access-Control-Allow-Origin') }
-        it { should include('Access-Control-Allow-Headers')}
-        it { should include('Access-Control-Max-Age') }
-        it { should include('Access-Control-Allow-Headers')}
-      end
-    end
   end
 
-  context "when allowed origins specified" do
+  context "with all options specified" do
     let(:options){ { allowed_origins: allowed_origins,
                      any_origin: false,
-                     request_methods: ['OPTIONS','GET','POST'] } }
-    context "from correct origin" do
-      it "succeeds" do
-        status.should == 200
-      end
-      describe "Access-Controll-Allow-Origin header" do
-        subject {headers['Access-Control-Allow-Origin'] }
-          it { should == options[:allowed_origins].join(',') }
-      end
+                     request_methods: ['OPTIONS','GET','POST'],
+                     allowed_headers: ['X-Requested-With', 'X-Some-Header'] } }
+    describe "Access-Controll-Allow-Origin header" do
+      subject {headers['Access-Control-Allow-Origin'] }
+      it { should == options[:allowed_origins].join(',') }
     end
-    context "from incorrect origin" do
-      let(:request_options) { {'HTTP_ORIGIN' => 'http://wrong.com'} }
-      it "is forbidden" do
-        status.should == 403
-      end
+    describe "Access-Control-Allow-Methods" do
+      subject { headers['Access-Control-Allow-Methods']} 
+      it { should == options[:request_methods].join(',') }
     end
-  end
-
-  context "with request methods specified" do
-    context "valid request" do
-      let(:request_options) {
-        {'HTTP_ORIGIN' => 'http://cors-site.com',
-         'REQUEST_METHOD' => 'OPTIONS',
-         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST'}
-      }
-      describe "Access-Control-Allow-Methods" do
-        subject { headers['Access-Control-Allow-Methods']} 
-        it { should == options[:request_methods].join(',') }
-      end
-    end
-    context "with invalid request method" do
-      let(:request_options) {
-        {'HTTP_ORIGIN' => 'http://cors-site.com',
-         'REQUEST_METHOD' => 'OPTIONS',
-         'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'PUT'}
-      }
-      it "is forbidden" do
-        status.should == 403
-      end
-    end
-  end
-
-  context "with allowed headers specified" do
-    let(:options) {
-      {any_origin: true,
-       request_methods: ['OPTIONS', 'GET'],
-       allowed_headers: ['X-Requested-With', 'X-Some-Header'] } }
     describe "Access-Control-Allow-Headers" do
       subject { headers['Access-Control-Allow-Headers'] }
       it { should == options[:allowed_headers].join(',') }
