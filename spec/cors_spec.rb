@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'rack-cors'
+require 'rack_cors'
 
-describe Rack::CORS do
+describe "Rack::CORS" do
   let(:plain_headers) { {'Content-Type' => 'text/plain'} }
   let(:app) { lambda { |env| [200, plain_headers, ['CORS is Cool']] } }
   let(:env) { Rack::MockRequest.env_for '/', request_options }
@@ -32,10 +32,7 @@ describe Rack::CORS do
   end
   context "any origin" do
     let(:options) {
-      {
-      request_methods: ['OPTIONS','GET', 'POST'],
-      any_origin: true
-      }
+      { request_methods: ['OPTIONS','GET', 'POST'], any_origin: true }
     }
     context "non-cors requests" do
       let(:request_options) {{}}
