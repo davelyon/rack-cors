@@ -45,6 +45,7 @@ describe "Rack::CORS" do
       it "injects the Access-Control-Allow-Origin header" do
         headers.keys.should include('Access-Control-Allow-Origin')
         headers['Access-Control-Allow-Origin'].should == '*'
+        headers['Access-Control-Allow-Headers'].should == ''
       end
     end
     context "when pre-flighting required" do
@@ -56,10 +57,10 @@ describe "Rack::CORS" do
           status.should == 200
         end
         it "responds with the proper headers" do
-          status, headers, body = cors.call env
           headers.keys.should include('Access-Control-Allow-Origin')
           headers.keys.should include('Access-Control-Allow-Methods')
           headers.keys.should include('Access-Control-Max-Age')
+          headers.keys.should include('Access-Control-Allow-Headers')
           body.should == nil
         end
       end

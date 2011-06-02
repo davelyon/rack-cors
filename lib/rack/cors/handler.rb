@@ -8,7 +8,8 @@ module Rack::CORS
         request_methods: ['OPTIONS'],
         max_age: '127800',
         any_origin: 'false',
-        allowed_origins: []
+        allowed_origins: [],
+        allowed_headers: []
       }.merge(options)
     end
 
