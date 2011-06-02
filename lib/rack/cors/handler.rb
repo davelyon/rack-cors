@@ -5,7 +5,7 @@ module Rack::CORS
       @app = app
       @options = {
         request_methods: ['OPTIONS'],
-        max_age: '127800',
+        max_age: '86400',
         any_origin: false,
         allowed_origins: [],
         allowed_headers: []

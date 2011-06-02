@@ -55,6 +55,7 @@ describe "Rack::CORS" do
   context "with all options specified" do
     let(:options){ { allowed_origins: allowed_origins,
                      any_origin: false,
+                     max_age: '0',
                      request_methods: ['OPTIONS','GET','POST'],
                      allowed_headers: ['X-Requested-With', 'X-Some-Header'] } }
     describe "Access-Controll-Allow-Origin header" do
@@ -68,6 +69,10 @@ describe "Rack::CORS" do
     describe "Access-Control-Allow-Headers" do
       subject { headers['Access-Control-Allow-Headers'] }
       it { should == options[:allowed_headers].join(',') }
+    end
+    describe "Access-Control-Max-Age" do
+      subject { headers['Access-Control-Max-Age'] }
+      it { should == options[:max_age] }
     end
   end
 end
