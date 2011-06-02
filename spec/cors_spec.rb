@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'rack_cors'
+require 'rack/cors'
 
 describe "Rack::CORS" do
   let(:plain_headers) { {'Content-Type' => 'text/plain'} }
