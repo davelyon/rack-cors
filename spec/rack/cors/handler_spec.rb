@@ -1,6 +1,14 @@
 require 'spec_helper'
 require 'rack/cors'
 
+shared_examples_for "CORS Request" do
+  subject { headers.keys }
+  it { should include('Access-Control-Allow-Origin') }
+  it { should include('Access-Control-Allow-Headers')}
+  it { should include('Access-Control-Max-Age') }
+  it { should include('Access-Control-Allow-Headers')}
+end
+
 describe "Rack::CORS" do
   let(:plain_headers) { {'Content-Type' => 'text/plain'} }
   let(:app) { lambda { |env| [200, plain_headers, ['CORS is Cool']] } }
@@ -23,11 +31,7 @@ describe "Rack::CORS" do
 
   describe "a simple CORS request" do
     describe "headers" do
-      subject { headers.keys }
-      it { should include('Access-Control-Allow-Origin') }
-      it { should include('Access-Control-Allow-Headers')}
-      it { should include('Access-Control-Max-Age') }
-      it { should include('Access-Control-Allow-Headers')}
+      it_should_behave_like "CORS Request"
     end
   end
 
@@ -44,11 +48,7 @@ describe "Rack::CORS" do
       headers['Content-Length'].should == 0
     end
     describe "headers" do
-      subject { headers.keys }
-      it { should include('Access-Control-Allow-Origin') }
-      it { should include('Access-Control-Allow-Headers')}
-      it { should include('Access-Control-Max-Age') }
-      it { should include('Access-Control-Allow-Headers')}
+      it_should_behave_like "CORS Request"
     end
   end
 
