@@ -24,9 +24,7 @@ describe "Rack::CORS" do
 
   describe "non-cors requests" do
     let(:request_options) {{}}
-    it "are unchanged" do
-      headers.should == plain_headers
-    end
+    it_should_behave_like "CORS Request"
   end
 
   describe "a simple CORS request" do

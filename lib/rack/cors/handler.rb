@@ -14,13 +14,10 @@ module Rack::CORS
 
     def call(env)
       status, headers, body = @app.call env
-      if env.has_key? 'HTTP_ORIGIN'
-        if env['REQUEST_METHOD'] == 'OPTIONS'
-          return preflight_request(env)
-        end
-        headers.merge!(base_headers)
+      if env['REQUEST_METHOD'] == 'OPTIONS'
+        return preflight_request(env)
       end
-      [status, headers, body]
+      [status, headers.merge(base_headers), body]
     end
 
     def preflight_request(env)
