@@ -33,6 +33,16 @@ describe "Rack::CORS" do
     end
   end
 
+  describe "non-cors OPTIONS request" do
+    let(:request_options) {
+      {'REQUEST_METHOD' => 'OPTIONS'}
+    }
+    it_should_behave_like "CORS Request"
+    it "should not have preflight headers" do
+      headers['Content-Length'].should_not == 0
+    end
+  end
+
   describe "pre-flight request" do
     let(:request_options) {
       {'REQUEST_METHOD' => 'OPTIONS',
