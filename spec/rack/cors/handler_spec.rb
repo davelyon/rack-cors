@@ -68,15 +68,15 @@ describe "Rack::CORS" do
                      allowed_headers: ['X-Requested-With', 'X-Some-Header'] } }
     describe "Access-Controll-Allow-Origin header" do
       subject {headers['Access-Control-Allow-Origin'] }
-      it { should == options[:allowed_origins].join(',') }
+      it { should == 'http://example.com http://cors.st http://a.b'}
     end
     describe "Access-Control-Allow-Methods" do
       subject { headers['Access-Control-Allow-Methods']} 
-      it { should == options[:request_methods].join(',') }
+      it { should == 'OPTIONS GET POST' }
     end
     describe "Access-Control-Allow-Headers" do
       subject { headers['Access-Control-Allow-Headers'] }
-      it { should == options[:allowed_headers].join(',') }
+      it { should == 'X-Requested-With X-Some-Header'}
     end
     describe "Access-Control-Max-Age" do
       subject { headers['Access-Control-Max-Age'] }

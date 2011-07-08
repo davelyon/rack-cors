@@ -1,4 +1,3 @@
-require 'rack/cors/headers'
 module Rack::CORS
   class Handler
     def initialize(app, options={})
@@ -8,8 +7,7 @@ module Rack::CORS
         max_age: '86400',
         any_origin: false,
         allowed_origins: [],
-        allowed_headers: []
-      }.merge(options)
+        allowed_headers: [] }.merge(options)
     end
 
     def call(env)
@@ -25,12 +23,10 @@ module Rack::CORS
     end
 
     def base_headers
-      {
-        'Access-Control-Allow-Origin' => allowed_origins,
-        'Access-Control-Allow-Methods' => @options[:request_methods].join(','),
+      { 'Access-Control-Allow-Origin' => allowed_origins,
+        'Access-Control-Allow-Methods' => @options[:request_methods].join(' '),
         'Access-Control-Max-Age' => @options[:max_age],
-        'Access-Control-Allow-Headers' => @options[:allowed_headers].join(',')
-      }
+        'Access-Control-Allow-Headers' => @options[:allowed_headers].join(' ') }
     end
 
     def preflight_headers
@@ -38,7 +34,7 @@ module Rack::CORS
     end
 
     def allowed_origins
-      @options[:any_origin] ? '*' : @options[:allowed_origins].join(',')
+      @options[:any_origin] ? '*' : @options[:allowed_origins].join(' ')
     end
   end
 end
