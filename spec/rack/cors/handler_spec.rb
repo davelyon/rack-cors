@@ -24,6 +24,7 @@ describe "Rack::CORS" do
 
   describe "non-cors requests" do
     let(:request_options) {{}}
+
     it_should_behave_like "CORS Request"
   end
 
@@ -34,10 +35,10 @@ describe "Rack::CORS" do
   end
 
   describe "non-cors OPTIONS request" do
-    let(:request_options) {
-      {'REQUEST_METHOD' => 'OPTIONS'}
-    }
+    let(:request_options) { {'REQUEST_METHOD' => 'OPTIONS'} }
+
     it_should_behave_like "CORS Request"
+
     it "should not have preflight headers" do
       headers['Content-Length'].should_not == 0
     end
@@ -49,12 +50,15 @@ describe "Rack::CORS" do
        'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST', 
        'HTTP_ORIGIN' => 'http://example.com'}
     }
+
     it "be an empty response" do
       body.should be_empty
     end
+
     it "Content-Length should be 0" do
       headers['Content-Length'].should == 0
     end
+
     describe "headers" do
       it_should_behave_like "CORS Request"
     end
@@ -66,18 +70,22 @@ describe "Rack::CORS" do
                      max_age: '0',
                      request_methods: ['OPTIONS','GET','POST'],
                      allowed_headers: ['X-Requested-With', 'X-Some-Header'] } }
+
     describe "Access-Controll-Allow-Origin header" do
       subject {headers['Access-Control-Allow-Origin'] }
       it { should == 'http://example.com http://cors.st http://a.b'}
     end
+
     describe "Access-Control-Allow-Methods" do
       subject { headers['Access-Control-Allow-Methods']} 
       it { should == 'OPTIONS GET POST' }
     end
+
     describe "Access-Control-Allow-Headers" do
       subject { headers['Access-Control-Allow-Headers'] }
       it { should == 'X-Requested-With X-Some-Header'}
     end
+
     describe "Access-Control-Max-Age" do
       subject { headers['Access-Control-Max-Age'] }
       it { should == options[:max_age] }
@@ -86,6 +94,7 @@ describe "Rack::CORS" do
 
   describe "passes Rack::Lint" do
     let(:lint) { Rack::Lint.new( cors ) }
+
     subject { lint.call(env) }
     it { should be_true }
   end
