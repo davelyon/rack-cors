@@ -83,4 +83,10 @@ describe "Rack::CORS" do
       it { should == options[:max_age] }
     end
   end
+
+  describe "passes Rack::Lint" do
+    let(:lint) { Rack::Lint.new( cors ) }
+    subject { lint.call(env) }
+    it { should be_true }
+  end
 end
